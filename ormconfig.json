@@ -1,0 +1,17 @@
+{
+    "type": "postgres",
+    "database": "torf",
+    "username": "postgres",
+    "password": "password",
+    "logging": true,
+    "synchronize": true,
+    "migrationsTableName": "torf_migration_table",
+    "entities": ["./src/entities/**/*.ts"],
+    "migrations": ["./src/migrations/**/*.ts"],
+    "subscribers": ["./src/subscribers/**/*.ts"],
+    "cli": {
+        "entityDir": "./src/entities",
+        "migrationsDir": "./src/migrations",
+        "subscribersDir": "./src/subscribers"
+    }
+}
