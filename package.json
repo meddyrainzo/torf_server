@@ -1,0 +1,29 @@
+{
+  "name": "torf_server",
+  "version": "1.0.0",
+  "description": "This is the backend for the truth or dare game",
+  "main": "server.ts",
+  "scripts": {
+    "dev": "nodemon --exec ts-node src/server.ts",
+    "watch": "tsc -w",
+    "start": "node dist/server.js"
+  },
+  "author": "Emediong Akpan",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/express": "^4.17.9",
+    "@types/node": "^14.14.20",
+    "nodemon": "^2.0.7",
+    "ts-node": "^9.1.1",
+    "type-graphql": "^1.1.1",
+    "typescript": "^4.1.3"
+  },
+  "dependencies": {
+    "apollo-server-express": "^2.19.1",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "graphql": "^15.4.0",
+    "pg": "^8.5.1",
+    "typeorm": "^0.2.29"
+  }
+}
