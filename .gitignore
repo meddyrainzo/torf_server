@@ -6,3 +6,5 @@ DS_Store
 node_modules
 yarn.lock
 package.json.lock
+
+yarn-error.log
