@@ -5,7 +5,10 @@ import {
   BaseEntity,
   PrimaryGeneratedColumn,
   Unique,
+  OneToMany,
+  ManyToMany,
 } from 'typeorm';
+import { Question } from './Question';
 
 @ObjectType()
 @Entity('users')
@@ -25,4 +28,10 @@ export class User extends BaseEntity {
 
   @Column('text')
   password: string;
+
+  @OneToMany(() => Question, (question) => question.askedBy)
+  asked: Question[];
+
+  @ManyToMany(() => Question, (question) => question.answeredBy)
+  answered: Question[];
 }

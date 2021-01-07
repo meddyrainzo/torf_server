@@ -2,11 +2,9 @@ import { User } from '../entities/User';
 import { RegisterUserInput } from '../input/RegisterUserInput';
 import { Arg, Mutation, Query, Resolver } from 'type-graphql';
 import { hash, compare } from 'bcrypt';
-import { sign } from 'jsonwebtoken';
 import { generate } from 'rand-token';
 import { LoginUserInput } from '../input/LoginUserInput';
 import { LoginSuccessResponse } from '../types/LoginSuccessResponse';
-import { tokenConfig } from '../configs';
 import { RefreshToken } from '../entities/RefreshToken';
 import { createAccessToken } from 'src/service/createAccessToken';
 
