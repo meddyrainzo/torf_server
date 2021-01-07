@@ -16,6 +16,7 @@ const app = express();
     schema: await buildSchema({
       resolvers: [IdentityResolver],
     }),
+    context: ({ req, res }) => ({ req, res }),
   });
 
   apolloServer.applyMiddleware({ app });

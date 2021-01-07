@@ -8,6 +8,7 @@ import { LoginUserInput } from '../input/LoginUserInput';
 import { LoginSuccessResponse } from '../types/LoginSuccessResponse';
 import { tokenConfig } from '../configs';
 import { RefreshToken } from '../entities/RefreshToken';
+import { createAccessToken } from 'src/service/createAccessToken';
 
 @Resolver()
 export class IdentityResolver {
@@ -58,7 +59,7 @@ export class IdentityResolver {
       throw new Error(invalidLoginDetails);
     }
 
-    const accessToken = this.createAccessToken(username);
+    const accessToken = createAccessToken(username);
 
     const refreshToken = await this.createRefreshToken(username);
     const response: LoginSuccessResponse = { user, accessToken, refreshToken };
@@ -85,10 +86,5 @@ export class IdentityResolver {
       throw new Error('Failed to generate token for user');
     }
     return refreshToken;
-  }
-
-  private createAccessToken(username: string): string {
-    const { secret } = tokenConfig;
-    return sign({ username }, secret, { expiresIn: '15m' });
   }
 }
