@@ -1,19 +1,29 @@
 import { User } from '../entities/User';
 import { RegisterUserInput } from '../input/RegisterUserInput';
-import { Arg, Mutation, Query, Resolver } from 'type-graphql';
+import {
+  Arg,
+  Ctx,
+  Mutation,
+  Query,
+  Resolver,
+  UseMiddleware,
+} from 'type-graphql';
 import { hash, compare } from 'bcrypt';
 import { generate } from 'rand-token';
 import { LoginUserInput } from '../input/LoginUserInput';
 import { LoginSuccessResponse } from '../types/LoginSuccessResponse';
 import { RefreshToken } from '../entities/RefreshToken';
-import { createAccessToken } from 'src/service/createAccessToken';
+import { createAccessToken } from '../service/createAccessToken';
+import { TorfContext } from '../context/TorfContext';
+import { authMiddleware } from '../middleware/authMiddleware';
 
 @Resolver()
 export class IdentityResolver {
   @Query(() => User)
-  async getRegisteredUserById(@Arg('userId') userId: number): Promise<User> {
+  @UseMiddleware(authMiddleware)
+  async getRegisteredUserById(@Ctx() context: TorfContext): Promise<User> {
     try {
-      const user = await User.findOne({ id: userId });
+      const user = await User.findOne({ username: context.username });
       if (!user) {
         throw new Error('User not found');
       }
@@ -42,7 +52,10 @@ export class IdentityResolver {
   }
 
   @Mutation(() => LoginSuccessResponse)
-  async loginUser(@Arg('loginInfo') input: LoginUserInput) {
+  async loginUser(
+    @Arg('loginInfo') input: LoginUserInput,
+    @Ctx() context: TorfContext
+  ) {
     const { username, password } = input;
     const invalidLoginDetails = 'Invalid username and/or password';
     const user = await User.findOne({ username });
@@ -60,7 +73,9 @@ export class IdentityResolver {
     const accessToken = createAccessToken(username);
 
     const refreshToken = await this.createRefreshToken(username);
-    const response: LoginSuccessResponse = { user, accessToken, refreshToken };
+    context.request.headers['authentication'] = refreshToken;
+    context.username = username;
+    const response: LoginSuccessResponse = { user, accessToken };
     return response;
   }
 

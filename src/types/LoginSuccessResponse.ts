@@ -8,7 +8,4 @@ export class LoginSuccessResponse {
 
   @Field()
   accessToken: string;
-
-  @Field()
-  refreshToken: string;
 }

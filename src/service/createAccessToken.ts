@@ -1,5 +1,5 @@
 import { sign } from 'jsonwebtoken';
-import { tokenConfig } from 'src/configs';
+import { tokenConfig } from '../configs';
 
 export function createAccessToken(username: string): string {
   const { secret } = tokenConfig;

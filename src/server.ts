@@ -5,18 +5,25 @@ import { buildSchema } from 'type-graphql';
 import { serverConfig } from './configs';
 import { IdentityResolver } from './resolvers/IdentityResolver';
 import { createConnection } from 'typeorm';
+import UserRepository from './repositories/UserRepository';
+import QuestionRepository from './repositories/QuestionRepository';
+import { QuestionResolver } from './resolvers/QuestionResolvers';
 
 const { port } = serverConfig;
 
 const app = express();
 
 (async () => {
-  await createConnection();
+  const connection = await createConnection();
+
+  UserRepository.addConnection(connection);
+  QuestionRepository.addConnection(connection);
+
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [IdentityResolver],
+      resolvers: [IdentityResolver, QuestionResolver],
     }),
-    context: ({ req, res }) => ({ req, res }),
+    context: ({ req, res }) => ({ request: req, response: res }),
   });
 
   apolloServer.applyMiddleware({ app });

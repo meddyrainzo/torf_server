@@ -1,11 +1,11 @@
 import { verify } from 'jsonwebtoken';
-import { TorfContext } from 'src/context/TorfContext';
-import { RefreshToken } from 'src/entities/RefreshToken';
-import { createAccessToken } from 'src/service/createAccessToken';
+import { TorfContext } from '../context/TorfContext';
+import { RefreshToken } from '../entities/RefreshToken';
+import { createAccessToken } from '../service/createAccessToken';
 import { MiddlewareFn } from 'type-graphql';
 import { tokenConfig } from '../configs';
 
-export const AuthMiddleware: MiddlewareFn<TorfContext> = async (
+export const authMiddleware: MiddlewareFn<TorfContext> = async (
   { context },
   next
 ) => {
@@ -28,7 +28,10 @@ export const AuthMiddleware: MiddlewareFn<TorfContext> = async (
     }
     checkIfTokenIsRevoked(token, userNotAuthenticated);
     slideExpirationDateIfExpired(token, userNotAuthenticated);
-    createAccessToken(token.username);
+    const newAccessToken = createAccessToken(token.username);
+    context.username = token.username;
+    context.request.headers['x-auth-refresh'] = token.token;
+    context.request.headers['authorization'] = newAccessToken;
     return next();
   }
   return next();

@@ -29,9 +29,15 @@ export class User extends BaseEntity {
   @Column('text')
   password: string;
 
+  @Field(() => [Question])
   @OneToMany(() => Question, (question) => question.askedBy)
   asked: Question[];
 
+  @Field(() => Int, { defaultValue: 0 })
+  @Column({ default: 0 })
+  answeredCorrectly: number;
+
+  @Field(() => Int, { defaultValue: 0 })
   @ManyToMany(() => Question, (question) => question.answeredBy)
   answered: Question[];
 }
