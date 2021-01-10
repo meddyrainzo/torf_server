@@ -79,6 +79,7 @@ export class IdentityResolver {
     const accessToken = createAccessToken(username);
     const refreshToken = await createRefreshToken(username);
     insertCookiesInResponse(context, accessToken, refreshToken);
+    console.log(context.request.cookies.refreshToken);
     context.username = username;
     const response: AuthenticationSuccessResponse = { user, accessToken };
     return response;

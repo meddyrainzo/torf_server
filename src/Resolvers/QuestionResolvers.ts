@@ -18,16 +18,9 @@ import {
 export class QuestionResolver {
   @Query(() => [Question])
   @UseMiddleware(authMiddleware)
-  async getQuestions(
-    @Arg('currentPage', () => Int) currentPage: number,
-    @Arg('resultsPerPage', () => Int) resultsPerPage: number,
-    @Ctx() context: TorfContext
-  ) {
+  async getQuestions(@Ctx() context: TorfContext) {
     const repository = getConnection().getRepository(Question);
-    const skip = (currentPage - 1) * resultsPerPage;
     const questions = await repository.find({
-      take: resultsPerPage,
-      skip,
       relations: ['askedBy', 'answeredBy'],
     });
     return questions.map((q) => {

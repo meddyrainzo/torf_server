@@ -12,6 +12,8 @@ export const authMiddleware: MiddlewareFn<TorfContext> = async (
   { context },
   next
 ) => {
+  console.log('______________________|||________________________');
+  console.log(JSON.stringify(context.request.cookies));
   const { login, refresh } = context.request.cookies;
   const token = login;
   const userNotAuthenticated = 'User not authenticated';
