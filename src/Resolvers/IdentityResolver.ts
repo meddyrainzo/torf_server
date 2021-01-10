@@ -22,7 +22,7 @@ import { authMiddleware } from '../middleware/authMiddleware';
 export class IdentityResolver {
   @Query(() => User)
   @UseMiddleware(authMiddleware)
-  async getRegisteredUserById(@Ctx() context: TorfContext): Promise<User> {
+  async getRegisteredUser(@Ctx() context: TorfContext): Promise<User> {
     try {
       const user = await User.findOne({ username: context.username });
       if (!user) {
