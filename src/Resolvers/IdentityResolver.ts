@@ -77,7 +77,8 @@ export class IdentityResolver {
     const { username } = user;
     const accessToken = createAccessToken(username);
     const refreshToken = await createRefreshToken(username);
-    context.request.headers['authentication'] = refreshToken;
+    context.request.headers['authorization'] = accessToken;
+    context.request.headers['x-auth-token'] = refreshToken;
     context.username = username;
     const response: AuthenticationSuccessResponse = { user, accessToken };
     return response;
