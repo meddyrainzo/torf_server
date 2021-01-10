@@ -5,8 +5,6 @@ import { buildSchema } from 'type-graphql';
 import { serverConfig } from './configs';
 import { IdentityResolver } from './resolvers/IdentityResolver';
 import { createConnection } from 'typeorm';
-import UserRepository from './repositories/UserRepository';
-import QuestionRepository from './repositories/QuestionRepository';
 import { QuestionResolver } from './resolvers/QuestionResolvers';
 
 const { port } = serverConfig;
@@ -14,10 +12,7 @@ const { port } = serverConfig;
 const app = express();
 
 (async () => {
-  const connection = await createConnection();
-
-  UserRepository.addConnection(connection);
-  QuestionRepository.addConnection(connection);
+  await createConnection();
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({

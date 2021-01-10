@@ -20,10 +20,6 @@ export class User extends BaseEntity {
 
   @Field()
   @Column('text')
-  name: string;
-
-  @Field()
-  @Column('text')
   username: string;
 
   @Column('text')

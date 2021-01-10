@@ -2,7 +2,7 @@ import { User } from '../entities/User';
 import { Field, ObjectType } from 'type-graphql';
 
 @ObjectType()
-export class LoginSuccessResponse {
+export class AuthenticationSuccessResponse {
   @Field(() => User)
   user: User;
 

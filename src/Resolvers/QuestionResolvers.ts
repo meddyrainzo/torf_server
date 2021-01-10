@@ -3,7 +3,7 @@ import { Question } from '../entities/Question';
 import { User } from '../entities/User';
 import { CreateQuestionInput } from '../input/CreateQuestionInput';
 import { authMiddleware } from '../middleware/authMiddleware';
-import QuestionRepository from '../repositories/QuestionRepository';
+import { getConnection } from 'typeorm';
 import {
   Query,
   UseMiddleware,
@@ -23,7 +23,7 @@ export class QuestionResolver {
     @Arg('resultsPerPage', () => Int) resultsPerPage: number,
     @Ctx() context: TorfContext
   ) {
-    const repository = QuestionRepository.getRepository();
+    const repository = getConnection().getRepository(Question);
     const skip = (currentPage - 1) * resultsPerPage;
     const questions = await repository.find({
       take: resultsPerPage,
