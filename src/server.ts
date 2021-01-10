@@ -21,7 +21,7 @@ const app = express();
     context: ({ req, res }) => ({ request: req, response: res }),
   });
 
-  apolloServer.applyMiddleware({ app });
+  apolloServer.applyMiddleware({ app, cors: false });
   app.listen(port, () => {
     console.log(`Server running on: http://localhost:${port}`);
   });
