@@ -13,6 +13,7 @@ import { AuthenticationSuccessResponse } from '../types/AuthenticationSuccessRes
 import {
   createAccessToken,
   createRefreshToken,
+  insertCookiesInResponse,
 } from '../service/createAccessToken';
 import { TorfContext } from '../context/TorfContext';
 import { authMiddleware } from '../middleware/authMiddleware';
@@ -77,8 +78,7 @@ export class IdentityResolver {
     const { username } = user;
     const accessToken = createAccessToken(username);
     const refreshToken = await createRefreshToken(username);
-    context.request.headers['authorization'] = accessToken;
-    context.request.headers['x-auth-token'] = refreshToken;
+    insertCookiesInResponse(context, accessToken, refreshToken);
     context.username = username;
     const response: AuthenticationSuccessResponse = { user, accessToken };
     return response;

@@ -1,7 +1,10 @@
 import { verify } from 'jsonwebtoken';
 import { TorfContext } from '../context/TorfContext';
 import { RefreshToken } from '../entities/RefreshToken';
-import { createAccessToken } from '../service/createAccessToken';
+import {
+  createAccessToken,
+  insertCookiesInResponse,
+} from '../service/createAccessToken';
 import { MiddlewareFn } from 'type-graphql';
 import { tokenConfig } from '../configs';
 
@@ -9,7 +12,8 @@ export const authMiddleware: MiddlewareFn<TorfContext> = async (
   { context },
   next
 ) => {
-  const token = context.request.headers['authorization'];
+  const { login, refresh } = context.request.cookies;
+  const token = login;
   const userNotAuthenticated = 'User not authenticated';
   if (!token) {
     throw new Error(userNotAuthenticated);
@@ -18,7 +22,7 @@ export const authMiddleware: MiddlewareFn<TorfContext> = async (
     const payload = verify(token, tokenConfig.secret);
     context.username = (<any>payload).username;
   } catch (err) {
-    const refreshToken = context.request.headers['x-auth-refresh'];
+    const refreshToken = refresh;
     if (!refreshToken) {
       throw new Error(userNotAuthenticated);
     }
@@ -30,8 +34,7 @@ export const authMiddleware: MiddlewareFn<TorfContext> = async (
     slideExpirationDateIfExpired(token, userNotAuthenticated);
     const newAccessToken = createAccessToken(token.username);
     context.username = token.username;
-    context.request.headers['x-auth-refresh'] = token.token;
-    context.request.headers['authorization'] = newAccessToken;
+    insertCookiesInResponse(context, newAccessToken, token.token);
     return next();
   }
   return next();

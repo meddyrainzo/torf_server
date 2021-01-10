@@ -6,10 +6,14 @@ import { serverConfig } from './configs';
 import { IdentityResolver } from './resolvers/IdentityResolver';
 import { createConnection } from 'typeorm';
 import { QuestionResolver } from './resolvers/QuestionResolvers';
+import cors from 'cors';
+import cookieParser from 'cookie-parser';
 
 const { port } = serverConfig;
 
 const app = express();
+app.use(cookieParser());
+app.use(cors());
 
 (async () => {
   await createConnection();
@@ -21,7 +25,7 @@ const app = express();
     context: ({ req, res }) => ({ request: req, response: res }),
   });
 
-  apolloServer.applyMiddleware({ app, cors: false });
+  apolloServer.applyMiddleware({ app });
   app.listen(port, () => {
     console.log(`Server running on: http://localhost:${port}`);
   });
